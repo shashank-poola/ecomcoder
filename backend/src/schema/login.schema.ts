@@ -1,8 +1,9 @@
 import { z } from 'zod';
+import { apiSecretBodySchema, storeIdSchema } from './prisma-fields.schema';
 
 export const loginSchema = z.object({
-  storeId: z.string().min(1),
-  apiSecret: z.string().min(1),
+  storeId: storeIdSchema,
+  apiSecret: apiSecretBodySchema,
 });
 
 export type LoginDto = z.infer<typeof loginSchema>;

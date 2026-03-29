@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../database.module';
-import { AuthController } from './auth.controller';
+import { DatabaseModule } from '../service/database.module';
+import { AuthController } from '../controller/auth.controller';
 
 @Module({
   imports: [DatabaseModule],

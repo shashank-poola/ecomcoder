@@ -30,7 +30,7 @@ After seeding, login uses **`apiSecret`: `demo_secret`** for any seeded store (s
 cd backend
 # Create .env: DATABASE_URL, optional JWT_SECRET, FRONTEND_URL, PORT
 bun install
-bun run dev            # http://localhost:8000/api/v1
+bun run dev            # GET http://localhost:8000/health  ·  API http://localhost:8000/api/v1
 ```
 
 ### 3. Frontend
@@ -40,6 +40,7 @@ cd frontend
 # Optional .env: NEXT_PUBLIC_API_URL=http://localhost:8000
 bun install
 bun run dev            # http://localhost:3000 → /dashboard
+bun run build          # uses a larger Node heap to avoid OOM during `next build` on big workspaces
 ```
 
 Open **http://localhost:3000/dashboard**. Pick a store, optional time range (`?range=7d`), and ensure the API is running.
@@ -69,8 +70,8 @@ Open **http://localhost:3000/dashboard**. Pick a store, optional time range (`?r
 ### Performance Optimizations
 
 - **Prisma:** Composite-style indexes on **`Event`** for `(storeId, timestamp)` and `(storeId, eventType, timestamp)` to support funnel and top-product queries.
-- **Backend:** In-memory **TTL cache** (≈30s) on heavy analytics service methods to protect the DB under repeat loads.
-- **Frontend:** Streaming-friendly layout; chart tooltips and polling isolated to client bundles.
+- **Backend:** Straight Prisma queries (no in-process cache) for predictable, easy-to-read behavior at demo scale.
+- **Frontend:** Server-rendered dashboard shell; small client islands for search, theme, charts, and light polling.
 
 ---
 
@@ -79,7 +80,7 @@ Open **http://localhost:3000/dashboard**. Pick a store, optional time range (`?r
 - **Daily revenue** endpoint is fixed to the service’s “last ~30 days” window; it does not yet accept the same `from`/`to` range as overview/top products.
 - **Top products table** uses **decorative** sparklines / % deltas where the API does not expose per-SKU time series.
 - **Header auth** (`x-store-id` / `x-user-id`) is allowed in non-production for local demos; disable with `ALLOW_HEADER_AUTH=false` when using JWT only.
-- **Scale:** In-memory cache is per process; multiple API instances need a shared cache (e.g. Redis) for consistency.
+- **Scale:** At very high traffic you would add caching (e.g. Redis) or read replicas; the current code favors clarity over micro-optimizations.
 
 ---
 

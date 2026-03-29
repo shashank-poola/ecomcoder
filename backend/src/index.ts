@@ -7,7 +7,7 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule, { logger: ['error', 'warn', 'log'] });
 
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1', { exclude: ['health'] });
 
   app.enableCors({
     origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
@@ -22,7 +22,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 8000;
   await app.listen(port);
-  logger.log(`Server running → http://localhost:${port}/api/v1`);
+  logger.log(`Server → http://localhost:${port}/health  |  API http://localhost:${port}/api/v1`);
 }
 
 bootstrap();

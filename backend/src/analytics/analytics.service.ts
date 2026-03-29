@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../service/prisma.service';
 import type {
   OverviewResponse,
   EventCounts,
@@ -9,33 +9,9 @@ import type {
   DailyRevenue,
 } from '../types/analytics.types';
 
-interface CacheEntry<T> {
-  data: T;
-  expiresAt: number;
-}
-
 @Injectable()
 export class AnalyticsService {
-  private readonly logger = new Logger(AnalyticsService.name);
-
-  // 30s TTL keeps the overview/top-products endpoints under 500ms under repeated load
-  private readonly cache = new Map<string, CacheEntry<unknown>>();
-  private readonly CACHE_TTL_MS = 30_000;
-
   constructor(private readonly prisma: PrismaService) {}
-
-  private getFromCache<T>(key: string): T | null {
-    const entry = this.cache.get(key) as CacheEntry<T> | undefined;
-    if (!entry || Date.now() > entry.expiresAt) {
-      this.cache.delete(key);
-      return null;
-    }
-    return entry.data;
-  }
-
-  private setToCache<T>(key: string, data: T): void {
-    this.cache.set(key, { data, expiresAt: Date.now() + this.CACHE_TTL_MS });
-  }
 
   private getDefaultDateBoundaries() {
     const today = new Date();
@@ -48,18 +24,11 @@ export class AnalyticsService {
   }
 
   async getOverview(storeId: string, dateRange?: DateRange): Promise<OverviewResponse> {
-    const cacheKey = `${storeId}:overview:${dateRange ? `${dateRange.from}-${dateRange.to}` : 'default'}`;
-    const cached = this.getFromCache<OverviewResponse>(cacheKey);
-    if (cached) return cached;
-
     const { todayStart, weekStart, monthStart } = this.getDefaultDateBoundaries();
     const eventFilter = dateRange
       ? { gte: new Date(dateRange.from), lte: new Date(dateRange.to) }
       : undefined;
 
-    const start = Date.now();
-
-    // Revenue queries hit DailyAggregate (pre-computed rows) — O(days) not O(events)
     const [todayAgg, weekAgg, monthAgg, rawCounts] = await Promise.all([
       this.prisma.client.dailyAggregate.aggregate({
         where: { storeId, date: { gte: todayStart } },
@@ -80,8 +49,6 @@ export class AnalyticsService {
       }),
     ]);
 
-    this.logger.debug(`Overview queries: ${Date.now() - start}ms`);
-
     const eventCounts: EventCounts = {
       page_view: 0,
       add_to_cart: 0,
@@ -97,7 +64,7 @@ export class AnalyticsService {
     const totalPurchases = eventCounts.purchase;
     const totalPageViews = eventCounts.page_view || 1;
 
-    const result: OverviewResponse = {
+    return {
       revenue: {
         today: Number(todayAgg._sum.totalRevenue ?? 0),
         thisWeek: Number(weekAgg._sum.totalRevenue ?? 0),
@@ -108,16 +75,9 @@ export class AnalyticsService {
       totalPurchases,
       totalPageViews,
     };
-
-    this.setToCache(cacheKey, result);
-    return result;
   }
 
   async getTopProducts(storeId: string, dateRange?: DateRange): Promise<TopProduct[]> {
-    const cacheKey = `${storeId}:top-products:${dateRange ? `${dateRange.from}-${dateRange.to}` : 'default'}`;
-    const cached = this.getFromCache<TopProduct[]>(cacheKey);
-    if (cached) return cached;
-
     const { monthStart } = this.getDefaultDateBoundaries();
 
     const rows = await this.prisma.client.event.groupBy({
@@ -137,7 +97,7 @@ export class AnalyticsService {
       take: 10,
     });
 
-    const result: TopProduct[] = rows
+    return rows
       .filter((r) => r.productId !== null)
       .map((r, i) => ({
         productId: r.productId as string,
@@ -145,9 +105,6 @@ export class AnalyticsService {
         orderCount: r._count._all,
         rank: i + 1,
       }));
-
-    this.setToCache(cacheKey, result);
-    return result;
   }
 
   async getRecentActivity(storeId: string, limit = 20): Promise<RecentEvent[]> {
@@ -162,10 +119,6 @@ export class AnalyticsService {
   }
 
   async getDailyRevenue(storeId: string): Promise<DailyRevenue[]> {
-    const cacheKey = `${storeId}:daily-revenue`;
-    const cached = this.getFromCache<DailyRevenue[]>(cacheKey);
-    if (cached) return cached;
-
     const { monthStart } = this.getDefaultDateBoundaries();
 
     const rows = await this.prisma.client.dailyAggregate.findMany({
@@ -174,12 +127,9 @@ export class AnalyticsService {
       select: { date: true, totalRevenue: true },
     });
 
-    const result: DailyRevenue[] = rows.map((r) => ({
+    return rows.map((r) => ({
       date: r.date.toISOString().split('T')[0] as string,
       revenue: Number(r.totalRevenue),
     }));
-
-    this.setToCache(cacheKey, result);
-    return result;
   }
 }

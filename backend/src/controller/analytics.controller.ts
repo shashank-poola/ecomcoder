@@ -8,23 +8,20 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import type { Request } from 'express';
-import { AnalyticsService } from './analytics.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 import { dateRangeSchema } from '../schema/date-range.schema';
 import type { DateRangeDto } from '../schema/date-range.schema';
 import { paginationSchema } from '../schema/pagination.schema';
 import type { PaginationDto } from '../schema/pagination.schema';
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
+import { ANALYTICS_ROUTES } from '../routes/analytics.route';
 import type { DateRange } from '../types/analytics.types';
 
-/**
- * Store analytics API. Paths are under the global prefix /api/v1.
- * Auth: Bearer JWT from POST /auth/login, or x-store-id + x-user-id (non-production).
- */
-@Controller('analytics')
+@Controller(ANALYTICS_ROUTES.BASE)
 export class AnalyticsController {
   constructor(private readonly analytics: AnalyticsService) {}
 
-  @Get('overview')
+  @Get(ANALYTICS_ROUTES.OVERVIEW)
   @HttpCode(HttpStatus.OK)
   async overview(
     @Req() req: Request,
@@ -35,7 +32,7 @@ export class AnalyticsController {
     return { success: true, data, error: null };
   }
 
-  @Get('top-products')
+  @Get(ANALYTICS_ROUTES.TOP_PRODUCTS)
   @HttpCode(HttpStatus.OK)
   async topProducts(
     @Req() req: Request,
@@ -46,7 +43,7 @@ export class AnalyticsController {
     return { success: true, data, error: null };
   }
 
-  @Get('recent-activity')
+  @Get(ANALYTICS_ROUTES.RECENT_ACTIVITY)
   @HttpCode(HttpStatus.OK)
   async recentActivity(
     @Req() req: Request,
@@ -56,7 +53,7 @@ export class AnalyticsController {
     return { success: true, data, error: null };
   }
 
-  @Get('daily-revenue')
+  @Get(ANALYTICS_ROUTES.DAILY_REVENUE)
   @HttpCode(HttpStatus.OK)
   async dailyRevenue(@Req() req: Request) {
     const data = await this.analytics.getDailyRevenue(req.storeId);

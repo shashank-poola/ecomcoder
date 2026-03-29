@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { db } from '../database/src/index';
+import { db } from '../../database/src/index';
 
 export type AppPrismaClient = typeof db;
 
