@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Store {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  createdAt DateTime @default(now())
+  events    Event[]
+  dailyAgg  DailyAggregate[]
+}
+
+model Event {
+  id        String    @id @default(cuid())
+  storeId   String
+  eventType String    // page_view | add_to_cart | remove_from_cart | checkout_started | purchase
+  timestamp DateTime  @default(now())
+  productId String?
+  amount    Decimal?
+  currency  String?
+  store     Store     @relation(fields: [storeId], references: [id])
+
+  @@index([storeId, timestamp])       
+  @@index([storeId, eventType])
+  @@index([storeId, eventType, timestamp])
+}
+
+model DailyAggregate {
+  id             String   @id @default(cuid())
+  storeId        String
+  date           DateTime 
+  totalRevenue   Decimal  @default(0)
+  pageViews      Int      @default(0)
+  purchases      Int      @default(0)
+  addToCart      Int      @default(0)
+  checkoutStart  Int      @default(0)
+  store          Store    @relation(fields: [storeId], references: [id])
+
+  @@unique([storeId, date])
+  @@index([storeId, date])
+}
