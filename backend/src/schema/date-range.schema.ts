@@ -1,11 +1,8 @@
-import { IsOptional, IsDateString } from 'class-validator';
+import { z } from 'zod';
 
-export class DateRangeDto {
-  @IsOptional()
-  @IsDateString()
-  from?: string;
+export const dateRangeSchema = z.object({
+  from: z.string().date().optional(),
+  to: z.string().date().optional(),
+});
 
-  @IsOptional()
-  @IsDateString()
-  to?: string;
-}
+export type DateRangeDto = z.infer<typeof dateRangeSchema>;

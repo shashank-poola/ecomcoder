@@ -10,6 +10,7 @@ model Store {
   id        String   @id @default(cuid())
   name      String
   ownerId   String
+  apiSecret String?
   createdAt DateTime @default(now())
   events    Event[]
   dailyAgg  DailyAggregate[]

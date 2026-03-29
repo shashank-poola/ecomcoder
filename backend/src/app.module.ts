@@ -1,15 +1,16 @@
 import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { DatabaseModule } from './database.module';
 import { AnalyticsModule } from './analytics/analytics.module';
-import { AnalyticsController } from './controllers/analytics.controller';
+import { AuthModule } from './auth/auth.module';
+import { AnalyticsController } from './analytics/analytics.controller';
 import { StoreAuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
-  imports: [DatabaseModule, AnalyticsModule],
+  imports: [DatabaseModule, AnalyticsModule, AuthModule],
+  providers: [StoreAuthMiddleware],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    // Apply multi-tenant auth to every analytics route
     consumer.apply(StoreAuthMiddleware).forRoutes(AnalyticsController);
   }
 }

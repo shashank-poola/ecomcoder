@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 dotenv.config();
+
+/** Plaintext secret for POST /api/v1/auth/login (local / Postman). Stored hashed in DB. */
+const DEMO_API_SECRET = 'demo_secret';
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -61,14 +65,15 @@ function getDailyEventCount(dayOffset: number) {
 }
 
 async function seedStores() {
+  const apiSecretHash = await bcrypt.hash(DEMO_API_SECRET, 10);
   for (const store of STORES) {
     await prisma.store.upsert({
       where: { id: store.id },
-      update: { name: store.name },
-      create: store,
+      update: { name: store.name, apiSecret: apiSecretHash },
+      create: { ...store, apiSecret: apiSecretHash },
     });
   }
-  console.log(`✓ ${STORES.length} stores upserted`);
+  console.log(`✓ ${STORES.length} stores upserted (apiSecret set for login)`);
 }
 
 async function seedEvents(storeId: string, daysBack: number) {
@@ -191,6 +196,8 @@ async function main() {
   console.log('\nSeed complete!');
   console.log('  Store 1  x-store-id: store_tech_001     x-user-id: user_001');
   console.log('  Store 2  x-store-id: store_fashion_002  x-user-id: user_002');
+  console.log('\n  Login (POST /api/v1/auth/login) — use this apiSecret for any seeded store:');
+  console.log(`    "${DEMO_API_SECRET}"`);
 }
 
 main()
