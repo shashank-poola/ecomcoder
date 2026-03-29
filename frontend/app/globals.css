@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* Dark (default) */
+:root,
+html[data-theme="dark"] {
+  --swiss-bg: #121218;
+  --swiss-surface: #18181f;
+  --swiss-fg: #fafafa;
+  --swiss-muted: #8c8c8c;
+  --swiss-dim: #5a5a5a;
+  --swiss-border: #1f1f1f;
+  --swiss-border-strong: #2e2e2e;
+  --swiss-up: #2d8f52;
+  --swiss-down: #c44c4c;
+}
+
+html[data-theme="light"] {
+  --swiss-bg: #f4f4f2;
+  --swiss-surface: #ffffff;
+  --swiss-fg: #0a0a0a;
+  --swiss-muted: #5c5c5c;
+  --swiss-dim: #737373;
+  --swiss-border: #d9d9d6;
+  --swiss-border-strong: #b8b8b3;
+  --swiss-up: #1a6b3c;
+  --swiss-down: #b91c1c;
+}
+
+@theme inline {
+  --color-background: var(--swiss-bg);
+  --color-foreground: var(--swiss-fg);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-jetbrains);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--swiss-bg);
+  color: var(--swiss-fg);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--swiss-fg);
+  color: var(--swiss-bg);
+}
+
+html[data-theme="light"] ::selection {
+  background: #0a0a0a;
+  color: #fafafa;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--swiss-border-strong);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--swiss-muted);
+}
+
+.skeleton {
+  background: var(--swiss-border);
+  min-height: 1rem;
+}
+
+/* Raised panels (Swiss-style cards) */
+.panel {
+  border: 1px solid var(--swiss-border);
+  background: var(--swiss-surface);
+}
