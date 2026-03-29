@@ -5,30 +5,23 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log'],
-  });
+  const app = await NestFactory.create(AppModule, { logger: ['error', 'warn', 'log'] });
 
   app.setGlobalPrefix('api/v1');
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'x-store-id', 'x-user-id'],
   });
 
   app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      forbidNonWhitelisted: true,
-    }),
+    new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }),
   );
 
-  const port = process.env.PORT ?? 3001;
+  const port = process.env.PORT ?? 8000;
   await app.listen(port);
-  logger.log(`Server running on http://localhost:${port}/api/v1`);
+  logger.log(`Server running → http://localhost:${port}/api/v1`);
 }
 
 bootstrap();
