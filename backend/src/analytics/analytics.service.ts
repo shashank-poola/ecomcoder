@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../service/prisma.service';
-import type {
-  OverviewResponse,
-  EventCounts,
-  TopProduct,
-  RecentEvent,
-  DateRange,
-  DailyRevenue,
-} from '../types/analytics.types';
+import type { OverviewResponse, EventCounts, TopProduct, RecentEvent, DateRange, DailyRevenue } from '../types/analytics.types';
 
 @Injectable()
 export class AnalyticsService {

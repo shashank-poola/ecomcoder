@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isoDateStringSchema } from './prisma-fields.schema';
+import { isoDateStringSchema } from './utils.schema';
 
 export const dateRangeSchema = z.object({
   from: isoDateStringSchema.optional(),

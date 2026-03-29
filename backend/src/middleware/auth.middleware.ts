@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET ?? 'dev_jwt_secret_change_in_production';
 
-/** When false, only Bearer JWT is accepted (set in production). */
 function allowHeaderAuth(): boolean {
   if (process.env.ALLOW_HEADER_AUTH === 'false') return false;
   if (process.env.ALLOW_HEADER_AUTH === 'true') return true;
+
   return process.env.NODE_ENV !== 'production';
 }
 
@@ -19,10 +19,19 @@ export class StoreAuthMiddleware implements NestMiddleware {
     if (authHeader?.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1]!;
       try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { storeId: string; userId: string };
+        const decoded = jwt.verify(
+          token, 
+          JWT_SECRET
+        ) as { 
+          storeId: string; 
+          userId: string 
+        };
+
         req.storeId = decoded.storeId;
         req.userId = decoded.userId;
+
         next();
+        
         return;
       } catch {
         throw new UnauthorizedException('Invalid or expired token');

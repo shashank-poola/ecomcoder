@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { apiSecretBodySchema, storeIdSchema } from './prisma-fields.schema';
+import { apiSecretBodySchema, storeIdSchema } from './utils.schema';
 
 export const loginSchema = z.object({
   storeId: storeIdSchema,
