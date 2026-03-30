@@ -1,7 +1,7 @@
 import { MousePointerClick, ShoppingCart, CreditCard, Package, Trash2 } from 'lucide-react';
-import type { RecentEvent } from '@/app/lib/types';
-import { timeAgo, formatCurrency, formatEventType } from '@/app/lib/utils';
-import { productDisplay } from '@/app/lib/product-catalog';
+import type { RecentEvent } from '@/types/store.types';
+import { timeAgo, formatCurrency, formatEventType } from '@/lib/utils';
+import { productDisplay } from '@/lib/product-catalog';
 
 const EVENT_META: Record<string, { className: string; Icon: typeof Package }> = {
   purchase: { className: 'border-[var(--swiss-up)] text-[var(--swiss-up)]', Icon: Package },
@@ -30,15 +30,15 @@ export function RecentActivity({ events }: Props) {
         return (
           <div
             key={event.id}
-            className="flex items-center gap-3 border-b border-[var(--swiss-border)] bg-[var(--swiss-bg)] px-2 py-2.5 last:border-b-0"
+            className="flex flex-wrap items-center gap-x-2 gap-y-1.5 border-b border-[var(--swiss-border)] bg-[var(--swiss-bg)] px-2 py-2.5 last:border-b-0 sm:flex-nowrap sm:gap-3"
           >
             <span
-              className={`inline-flex items-center gap-1 border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide ${meta.className}`}
+              className={`inline-flex max-w-full shrink-0 items-center gap-1 border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide sm:text-[10px] ${meta.className}`}
             >
-              <Icon className="h-3 w-3" strokeWidth={1.5} />
-              {formatEventType(event.eventType)}
+              <Icon className="h-3 w-3 shrink-0" strokeWidth={1.5} />
+              <span className="truncate">{formatEventType(event.eventType)}</span>
             </span>
-            <span className="flex-1 truncate text-[11px] text-[var(--swiss-muted)]">
+            <span className="min-w-0 flex-1 basis-[40%] truncate text-[11px] text-[var(--swiss-muted)] sm:basis-auto">
               {event.productId ? productDisplay(event.productId).name : '—'}
             </span>
             {event.amount != null && (

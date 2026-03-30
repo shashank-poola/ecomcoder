@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import type { TimeRangeId } from '@/app/lib/types';
+import type { TimeRangeId } from '@/types/store.types';
 
 const RANGES: { id: TimeRangeId; label: string }[] = [
   { id: '1h', label: '1H' },
@@ -25,7 +25,7 @@ export function TimeRangeToggle() {
 
   return (
     <div
-      className="inline-flex border border-[var(--swiss-border)]"
+      className="inline-flex shrink-0 border border-[var(--swiss-border)]"
       role="group"
       aria-label="Time range"
     >
@@ -37,7 +37,7 @@ export function TimeRangeToggle() {
             type="button"
             onClick={() => setRange(id)}
             className={[
-              'px-2.5 py-1 text-[11px] font-medium tracking-wide transition-colors',
+              'min-h-9 min-w-9 shrink-0 px-2 py-1.5 text-[11px] font-medium tracking-wide transition-colors sm:min-w-0 sm:px-2.5 sm:py-1',
               active
                 ? 'bg-[var(--swiss-fg)] text-[var(--swiss-bg)]'
                 : 'text-[var(--swiss-muted)] hover:text-[var(--swiss-fg)]',

@@ -1,4 +1,4 @@
-import type { OverviewData, TopProduct, RecentEvent, DailyRevenue } from './types';
+import type { OverviewData, TopProduct, RecentEvent, DailyRevenue } from '../types/store.types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 

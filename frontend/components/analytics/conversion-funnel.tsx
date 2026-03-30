@@ -1,6 +1,6 @@
 import { Eye, ShoppingCart, CreditCard, Package } from 'lucide-react';
-import type { EventCounts } from '@/app/lib/types';
-import { formatNumber } from '@/app/lib/utils';
+import type { EventCounts } from '@/types/store.types';
+import { formatNumber } from '@/lib/utils';
 
 interface Step {
   label: string;
@@ -28,12 +28,12 @@ export function ConversionFunnel({ eventCounts }: { eventCounts: EventCounts }) 
 
         return (
           <div key={step.key}>
-            <div className="mb-1.5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Icon className="h-3.5 w-3.5 text-[var(--swiss-muted)]" strokeWidth={1.5} />
-                <span className="text-[12px] text-[var(--swiss-muted)]">{step.label}</span>
+            <div className="mb-1.5 flex min-w-0 flex-wrap items-center justify-between gap-x-2 gap-y-1">
+              <div className="flex min-w-0 items-center gap-2">
+                <Icon className="h-3.5 w-3.5 shrink-0 text-[var(--swiss-muted)]" strokeWidth={1.5} />
+                <span className="min-w-0 text-[11px] text-[var(--swiss-muted)] sm:text-[12px]">{step.label}</span>
               </div>
-              <div className="flex items-center gap-2 font-mono text-[12px]">
+              <div className="flex shrink-0 items-center gap-2 font-mono text-[11px] sm:text-[12px]">
                 <span className="text-[var(--swiss-fg)]">{formatNumber(count)}</span>
                 {i > 0 && <span className="text-[var(--swiss-dim)]">{pct}%</span>}
               </div>

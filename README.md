@@ -158,7 +158,9 @@ ecomcoder/
 │   ├── database/             # Prisma schema, migrations, seed
 │   └── package.json
 └── frontend/
-    ├── app/                  # Next.js App Router (layout, dashboard, lib, styles)
+    ├── app/                  # Next.js App Router (layout, dashboard routes, global styles)
+    ├── lib/                  # Shared TS: API client, types, utils, theme
+    ├── constants/            # e.g. demo store list
     ├── components/           # Dashboard + analytics UI
     ├── public/ecom/          # Logos + favicon assets
     └── package.json

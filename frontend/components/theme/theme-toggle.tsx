@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import type { ThemeMode } from '@/app/lib/theme';
+import type { ThemeMode } from '@/lib/theme';
 
 interface Props {
   initialTheme: ThemeMode;

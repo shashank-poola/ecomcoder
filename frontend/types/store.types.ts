@@ -2,6 +2,8 @@ export interface Store {
   id: string;
   name: string;
   userId: string;
+  /** Shown on very narrow screens; full `name` stays in `title` tooltip */
+  shortName?: string;
 }
 
 export interface DailyRevenue {

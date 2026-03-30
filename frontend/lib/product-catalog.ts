@@ -1,4 +1,3 @@
-/** Maps seed product ids to realistic display labels (SKU + name). */
 const CATALOG: Record<string, { name: string; sku: string }> = {
   prod_airpods: { name: 'AirPods Pro (2nd gen)', sku: 'SKU-APL-AIR-02' },
   prod_macbook: { name: 'MacBook Pro 14"', sku: 'SKU-APL-MBP-14' },

@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { cookies } from 'next/headers';
-import { api } from '@/app/lib/api';
-import { STORES } from '@/app/lib/constants/stores';
-import { parseThemeCookie } from '@/app/lib/theme';
+import { api } from '@/lib/api';
+import { STORES } from '@/constants/stores';
+import { parseThemeCookie } from '@/lib/theme';
 import { DashboardFilterProvider } from '@/components/dashboard/dashboard-filter-context';
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { ViewTabs } from '@/components/dashboard/view-tabs';
@@ -36,16 +36,16 @@ export default async function DashboardPage({
 
   return (
     <DashboardFilterProvider>
-      <div className="min-h-screen text-[var(--swiss-fg)] antialiased">
+      <div className="min-h-screen overflow-x-hidden text-[var(--swiss-fg)] antialiased">
         <DashboardHeader stores={STORES} activeStoreId={store.id} range={range} theme={theme} />
 
-        <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 sm:py-8">
-          <div className="mb-6 flex flex-col gap-2 border-b border-[var(--swiss-border)] pb-6 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-[var(--swiss-fg)] sm:text-3xl">
+        <main className="mx-auto min-w-0 max-w-[1400px] px-3 py-5 sm:px-6 sm:py-8">
+          <div className="mb-5 flex flex-col gap-2 border-b border-[var(--swiss-border)] pb-5 sm:mb-6 sm:pb-6">
+            <div className="min-w-0">
+              <h1 className="text-xl font-semibold tracking-tight text-[var(--swiss-fg)] sm:text-2xl md:text-3xl">
                 {store.name}
               </h1>
-              <p className={sectionSub}>
+              <p className={`${sectionSub} mt-1 max-w-prose`}>
                 Live performance · revenue, funnel, and storefront events (sample data)
               </p>
             </div>
@@ -57,7 +57,7 @@ export default async function DashboardPage({
             <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.14em] text-[var(--swiss-dim)]">
               Overview
             </h2>
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-4">
               <MetricCard label="Revenue today" value={revenue.today} type="currency" icon="today" />
               <MetricCard label="This week" value={revenue.thisWeek} type="currency" icon="week" />
               <MetricCard
@@ -79,13 +79,13 @@ export default async function DashboardPage({
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6">
-            <section id="revenue" className="panel scroll-mt-24 p-5 sm:p-6 lg:col-span-2">
-              <div className="mb-6 flex items-start justify-between gap-4">
+            <section id="revenue" className="panel scroll-mt-24 p-4 sm:p-6 lg:col-span-2">
+              <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
                   <h2 className={sectionTitle}>Revenue trend</h2>
                   <p className={sectionSub}>Daily net revenue · trailing 30 days</p>
                 </div>
-                <span className="border border-[var(--swiss-border)] px-2 py-0.5 font-mono text-[11px] text-[var(--swiss-dim)]">
+                <span className="w-fit border border-[var(--swiss-border)] px-2 py-0.5 font-mono text-[11px] text-[var(--swiss-dim)]">
                   30D
                 </span>
               </div>
@@ -94,7 +94,7 @@ export default async function DashboardPage({
               </Suspense>
             </section>
 
-            <section id="funnel" className="panel scroll-mt-24 p-5 sm:p-6">
+            <section id="funnel" className="panel scroll-mt-24 p-4 sm:p-6">
               <h2 className={sectionTitle}>Conversion funnel</h2>
               <p className={`${sectionSub} mb-6`}>Session → cart → checkout → purchase</p>
               <ConversionFunnel eventCounts={eventCounts} />
@@ -102,8 +102,8 @@ export default async function DashboardPage({
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
-            <section id="products" className="panel scroll-mt-24 p-5 sm:p-6">
-              <div className="mb-6 flex items-start justify-between gap-4">
+            <section id="products" className="panel scroll-mt-24 p-4 sm:p-6">
+              <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
                   <h2 className={sectionTitle}>Top products</h2>
                   <p className={sectionSub}>By net revenue · respects range filter above</p>
@@ -113,8 +113,8 @@ export default async function DashboardPage({
               <ProductsLeaderboard products={topProducts} />
             </section>
 
-            <section id="activity" className="panel scroll-mt-24 p-5 sm:p-6">
-              <div className="mb-6 flex items-start justify-between gap-4">
+            <section id="activity" className="panel scroll-mt-24 p-4 sm:p-6">
+              <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
                   <h2 className={sectionTitle}>Recent activity</h2>
                   <p className={sectionSub}>Latest events from this page load · refresh page to update</p>

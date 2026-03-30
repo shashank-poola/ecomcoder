@@ -1,12 +1,12 @@
 'use client';
 
-import type { DailyRevenue } from '@/app/lib/types';
-import { formatCurrency, formatDate } from '@/app/lib/utils';
+import type { DailyRevenue } from '@/types/store.types';
+import { formatCurrency, formatDate } from '@/lib/utils';
 
 export function RevenueChart({ data }: { data: DailyRevenue[] }) {
   if (data.length === 0) {
     return (
-      <div className="flex h-44 items-center justify-center text-[13px] text-[var(--swiss-muted)]">
+      <div className="flex h-40 items-center justify-center text-[13px] text-[var(--swiss-muted)] sm:h-44">
         No revenue data
       </div>
     );
@@ -16,16 +16,16 @@ export function RevenueChart({ data }: { data: DailyRevenue[] }) {
 
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute left-0 top-0 flex h-44 flex-col justify-between py-0.5">
+      <div className="pointer-events-none absolute left-0 top-0 flex h-40 flex-col justify-between py-0.5 sm:h-44">
         {[maxRevenue, maxRevenue * 0.5, 0].map((v) => (
-          <span key={v} className="font-mono text-[10px] tabular-nums text-[var(--swiss-dim)]">
+          <span key={v} className="font-mono text-[9px] tabular-nums text-[var(--swiss-dim)] sm:text-[10px]">
             {v > 0 ? formatCurrency(v) : '$0'}
           </span>
         ))}
       </div>
 
-      <div className="pl-12">
-        <div className="relative h-44 border-b border-[var(--swiss-border-strong)]">
+      <div className="pl-9 sm:pl-12">
+        <div className="relative h-40 border-b border-[var(--swiss-border-strong)] sm:h-44">
           <div className="absolute inset-0 flex items-stretch gap-px">
             {data.map((d) => {
               const heightPct = (d.revenue / maxRevenue) * 100;

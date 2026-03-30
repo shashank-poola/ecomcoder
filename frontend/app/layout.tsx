@@ -1,7 +1,7 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { DM_Sans, JetBrains_Mono } from 'next/font/google';
-import { parseThemeCookie } from './lib/theme';
+import { parseThemeCookie } from '@/lib/theme';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -15,6 +15,12 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: 'Store Analytics Dashboard',
@@ -37,7 +43,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${dmSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[var(--swiss-bg)] text-[var(--swiss-fg)] antialiased">{children}</body>
+      <body
+        className="min-h-screen bg-[var(--swiss-bg)] text-[var(--swiss-fg)] antialiased"
+        suppressHydrationWarning
+      >
+        {children}
+      </body>
     </html>
   );
 }

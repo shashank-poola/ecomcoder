@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react';
 import { Star } from 'lucide-react';
-import type { TopProduct } from '@/app/lib/types';
-import { productDisplay } from '@/app/lib/product-catalog';
-import { formatCurrency, productTicker, pseudoPercentChange, pseudoTrendPoints } from '@/app/lib/utils';
+import type { TopProduct } from '@/types/store.types';
+import { productDisplay } from '@/lib/product-catalog';
+import { formatCurrency, productTicker, pseudoPercentChange, pseudoTrendPoints } from '@/lib/utils';
 import { Sparkline } from '@/components/charts/sparkline';
 import { useDashboardFilter } from './dashboard-filter-context';
 
@@ -52,8 +52,8 @@ export function ProductsLeaderboard({ products }: Props) {
           className="h-9 w-full bg-transparent px-3 text-[13px] text-[var(--swiss-fg)] placeholder:text-[var(--swiss-dim)] focus:outline-none"
         />
       </label>
-      <div className="overflow-x-auto border border-[var(--swiss-border)]">
-        <table className="w-full min-w-[720px] border-collapse text-left text-[12px]">
+      <div className="-mx-px overflow-x-auto overscroll-x-contain border border-[var(--swiss-border)] touch-pan-x">
+        <table className="w-full min-w-[640px] border-collapse text-left text-[11px] sm:min-w-[720px] sm:text-[12px]">
           <thead>
             <tr className="border-b border-[var(--swiss-border)] text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--swiss-dim)]">
               <th className="w-10 px-2 py-2.5" aria-label="Watchlist" />
