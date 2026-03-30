@@ -20,8 +20,7 @@ interface Props {
 export function DashboardHeader({ stores, activeStoreId, range, theme }: Props) {
   const { query, setQuery } = useDashboardFilter();
   const logoSrc = theme === 'light' ? '/ecom/ecom.png' : '/ecom/ecom.png';
-  /** Dark theme: lighten knocks out black bg, showing white logo.
-   *  Light theme: invert flips black-bg PNG to white-bg, then multiply makes white transparent. */
+
   const logoBlend =
     theme === 'dark'
       ? '[mix-blend-mode:lighten]'
@@ -41,12 +40,11 @@ export function DashboardHeader({ stores, activeStoreId, range, theme }: Props) 
   return (
     <header className="sticky top-0 z-20 border-b border-[var(--swiss-border)] bg-[var(--swiss-bg)]">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-3 py-3 sm:gap-4 sm:px-6">
-        <div className="flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <Link
             href="/dashboard"
-            className="min-w-0 shrink bg-transparent outline-none ring-0"
+            className="shrink-0 bg-transparent outline-none ring-0"
           >
-            {/* img + blend: opaque #000 in files composites away; use transparent exports later to drop blend */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logoSrc}
@@ -59,7 +57,26 @@ export function DashboardHeader({ stores, activeStoreId, range, theme }: Props) 
             />
           </Link>
 
-          <div className="flex min-w-0 max-w-[min(100%,calc(100vw-7rem))] items-center justify-end gap-1.5 sm:max-w-none sm:gap-2 md:gap-3">
+          <label className="relative mx-4 hidden flex-1 items-center border border-[var(--swiss-border)] bg-[var(--swiss-surface)] sm:flex">
+            <Search
+              className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 shrink-0 text-[var(--swiss-muted)]"
+              strokeWidth={1.5}
+            />
+            <input
+              id="dashboard-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products, SKUs…"
+              className="h-9 min-w-0 w-full bg-transparent py-2 pl-8 pr-10 text-[13px] text-[var(--swiss-fg)] placeholder:text-[var(--swiss-dim)] focus:outline-none"
+              autoComplete="off"
+            />
+            <kbd className="pointer-events-none absolute right-2.5 hidden rounded border border-[var(--swiss-border)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--swiss-muted)] sm:inline">
+              /
+            </kbd>
+          </label>
+
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 md:gap-3">
             <span className="hidden shrink-0 text-[12px] font-medium tracking-wide text-[var(--swiss-muted)] lg:inline">
               Reports
             </span>
@@ -79,25 +96,6 @@ export function DashboardHeader({ stores, activeStoreId, range, theme }: Props) 
             </div>
           </div>
         </div>
-
-        <label className="relative mx-auto flex w-full max-w-lg items-center border border-[var(--swiss-border)] bg-[var(--swiss-surface)] md:max-w-md lg:max-w-lg">
-          <Search
-            className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 shrink-0 text-[var(--swiss-muted)]"
-            strokeWidth={1.5}
-          />
-          <input
-            id="dashboard-search"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products, SKUs…"
-            className="h-9 min-w-0 w-full bg-transparent py-2 pl-8 pr-10 text-[13px] text-[var(--swiss-fg)] placeholder:text-[var(--swiss-dim)] focus:outline-none"
-            autoComplete="off"
-          />
-          <kbd className="pointer-events-none absolute right-2.5 hidden rounded border border-[var(--swiss-border)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--swiss-muted)] sm:inline">
-            /
-          </kbd>
-        </label>
 
         <div className="flex flex-col gap-2 border-t border-[var(--swiss-border)] pt-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <p className="shrink-0 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--swiss-dim)]">
