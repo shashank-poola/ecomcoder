@@ -12,7 +12,7 @@ This project is a **multi-tenant store analytics dashboard** so owners can see r
 
 **Why it’s structured this way**
 
-The brief asked for fast reads at scale, clear trade-offs, and honest limitations—so the README documents aggregation choices, what’s demo vs. production-ready, and what you’d improve next.
+Fast reads at scale, clear trade-offs, and honest limitations—so the README documents aggregation choices, what’s demo vs. production-ready, and what you’d improve next.
 
 ---
 
@@ -37,7 +37,6 @@ The brief asked for fast reads at scale, clear trade-offs, and honest limitation
 | **Styling** | Tailwind CSS v4 | Layout, theme tokens, responsive grids |
 | **Icons** | Lucide | Header, metrics, funnel, activity |
 
-*Redis was optional in the brief; this repo stays simple with indexed SQL + rollups instead.*
 
 ---
 
